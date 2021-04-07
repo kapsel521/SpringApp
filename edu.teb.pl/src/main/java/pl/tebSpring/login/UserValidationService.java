@@ -1,4 +1,4 @@
-package pl.tebSpring;
+package pl.tebSpring.login;
 
 import org.springframework.stereotype.Service;
 
