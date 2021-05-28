@@ -3,7 +3,7 @@
 	<div class="container">
 		<table class="table table-striped">
 			<!-- tytuł tablicy -->
-			<caption>Your todos are</caption>
+			<caption><spring:message code="todo.caption" /></caption>
 			<thead>
 				<!-- nagłówki -->
 				<tr>

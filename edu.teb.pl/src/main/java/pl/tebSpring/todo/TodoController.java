@@ -3,6 +3,10 @@ package pl.tebSpring.todo;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,11 +14,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+
+import pl.tebSpring.exception.ExceptionController;
 
 @Controller
 public class TodoController {
@@ -22,6 +29,14 @@ public class TodoController {
 	//Auto wiring za pomocą Springa:
 	@Autowired
 	TodoService service;
+	
+	private Log logger = LogFactory.getLog(ExceptionController.class);
+
+	@ExceptionHandler(value = Exception.class)
+	public String handleError(HttpServletRequest req, Exception exception) {
+		logger.error("Request: " + req.getRequestURL() + " raised " + exception);
+		return "error-specific";
+	}
 	
 	@InitBinder
 	private void initBinder(WebDataBinder binder) {
@@ -48,8 +63,12 @@ public class TodoController {
 	
 	@RequestMapping(value="/add-todo", method = RequestMethod.GET)
 	public String showTodoPage(ModelMap model) {
-		model.addAttribute("todo", new Todo(0, retrieveLoginUser(), "", new Date(), false));
-		return "todo";
+		
+		throw new RuntimeException("test error");
+		
+//		model.addAttribute("todo", new Todo(0, retrieveLoginUser(), "", new Date(), false));
+//		return "todo";
+		
 	}
 	
 	@RequestMapping(value="/add-todo", method = RequestMethod.POST)
